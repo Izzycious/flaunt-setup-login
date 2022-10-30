@@ -1,51 +1,39 @@
 import Head from "next/head";
-import Link from "next/link";
-import Layout from "../components/Layout";
-import {
-  Form,
-  FormControl,
-  Button,
-  FormLabel,
-  FormGroup,
-} from "react-bootstrap";
+import Header from "../components/Header";
+import styles from "../styles/Home.module.css";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
-  return (
-    <>
-      <Head>
-        <title>Login Page</title>
-      </Head>
-      <Layout>
-        <div className="login-wrap">
-          <Form className="form-signin">
-            <img
-              className="mb-4"
-              alt=""
-              width="72"
-              height="72"
-              src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg"
-            />
-            <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
-            <FormGroup>
-              <FormLabel>Email</FormLabel>
-              <FormControl
-                type="text"
-                placeholder="useremail@domain.com"
-                className="mr-sm-2"
-              />
-            </FormGroup>
-            <FormGroup>
-              <FormLabel>Password</FormLabel>
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
 
-              <FormControl type="password" className="mr-sm-2" />
-            </FormGroup>
-            <Button className="btn-lg btn-block" variant="primary">
-              Sign In
-            </Button>
-            <Link href="/">Forgot Password?</Link>
-          </Form>
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>Flaunt-setup</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Header />
+      <main className={styles.main}>
+        <div className={styles.user}>
+          {loading && <div className={styles.title}>Loading...</div>}
+          {session && (
+            <>
+              <h1 className={styles.title}>
+                You're logged in as {session.user.name ?? session.user.email}!
+              </h1>
+              <p style={{ marginBottom: "10px" }}> </p> <br />
+              <img src={session.user.image} alt="" className={styles.avatar} />
+            </>
+          )}
+          {!session && (
+            <>
+              <p className={styles.title}>Please log in to continue</p>
+              <img src="no-user.jpg" alt="" className={styles.avatar} />
+            </>
+          )}
         </div>
-      </Layout>
-    </>
+      </main>
+    </div>
   );
 }
