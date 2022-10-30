@@ -1,7 +1,12 @@
-import "../styles/app.scss";
+import { SessionProvider } from "next-auth/react";
+import "../styles/globals.css";
 
-function Login({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+function MyApp({ Component, pageProps }) {
+  return (
+    <SessionProvider session={pageProps.session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+  );
 }
 
-export default Login;
+export default MyApp;

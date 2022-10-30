@@ -1,17 +1,32 @@
-import { Container, Row, Col, Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { useSession, signIn, signOut } from "next-auth/react";
+import Link from "next/link";
 
-const headerStyle = {};
+export default function Header() {
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    signIn();
+  };
+  const handleSignOut = (e) => {
+    e.preventDefault();
+    signOut();
+  };
 
-const Header = () => (
-  <header>
-    <Navbar className="Header">
-      <Container className="d-flex justify-content-between px-3">
-        <a href="#" className="navbar-brand d-flex align-items-center py-2">
-          Flaunt Setup
+  const { data: session } = useSession;
+  return (
+    <div className="header">
+      <Link href="/">
+        <a className="logo">NextAuth.js</a>
+      </Link>
+      {session && (
+        <a href="#" onClick={handleSignOut} className="btn-signin">
+          signOut
         </a>
-      </Container>
-    </Navbar>
-  </header>
-);
-
-export default Header;
+      )}
+      {!session && (
+        <a href="#" onClick={handleSignIn} className="btn-signin">
+          signIn
+        </a>
+      )}
+    </div>
+  );
+}
